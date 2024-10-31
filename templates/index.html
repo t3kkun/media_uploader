@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <title>Upload and List Media Files</title>
     <link rel="stylesheet" href="/static/styles.css">
+    <link rel="icon" href="/static/favicon.ico">
 </head>
 <body>
-    <h1>Upload Image or Video from iPhone</h1>
-    <p>Access this page from your iPhone using: <strong>http://{{ ip_address }}:{{ port }}</strong></p>
+    <h1>Upload Image or Video</h1>
+    <p>Access this page from your devices using: <strong>http://{{ ip_address }}:{{ port }}</strong></p>
     <form action="/upload" method="post" enctype="multipart/form-data">
         <input type="file" name="file" id="file" accept="image/*,video/*">
         <label for="file">Choose a file</label>
