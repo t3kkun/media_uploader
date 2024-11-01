@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template, send_from_directory, redirect, url_for
+import time
 import os
 import socket
 
@@ -24,11 +25,30 @@ def index():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
+    start_time = time.time()
+
     if 'file' not in request.files:
         return redirect(url_for('index'))
     file = request.files['file']
     if file.filename != '':
-        file.save(os.path.join(UPLOAD_FOLDER, file.filename))
+        file_path=os.path.join(UPLOAD_FOLDER, file.filename)
+        file.save(file_path)
+
+        end_time = time.time()
+        transfer_time = end_time - start_time
+         # ファイルサイズを取得し、転送速度を計算
+        file_size = os.path.getsize(file_path)  # バイト単位
+        transfer_speed = (file_size / transfer_time) / 1024  # KB/s
+
+        # 表示: ファイルサイズ(MB)と転送速度(MB/sまたはKB/s)
+        file_size_mb = file_size / (1024 * 1024)  # MB単位
+        if transfer_speed >= 1024:
+            transfer_speed /= 1024  # MB/s に変換
+            print(f"File uploaded in {transfer_time:.2f} sec, Size: {file_size_mb:.2f} MB, Speed: {transfer_speed:.2f} MB/s")
+        else:
+            print(f"File uploaded in {transfer_time:.2f} sec, Size: {file_size_mb:.2f} MB, Speed: {transfer_speed:.2f} KB/s")
+
+
     return redirect(url_for('index'))
 
 @app.route('/uploads/<filename>')
