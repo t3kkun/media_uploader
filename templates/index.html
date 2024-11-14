@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>Upload and List Media Files</title>
@@ -7,13 +7,31 @@
     <link rel="icon" href="/static/favicon.ico">
 </head>
 <body>
-    <h1>Upload Image or Video</h1>
+    <h1>Media Transfer and Text Upload</h1>
+
     <p>Access this page from your devices using: <strong>http://{{ ip_address }}:{{ port }}</strong></p>
-    <form action="/upload" method="post" enctype="multipart/form-data">
+    
+    <!-- テキストの投稿フォーム -->
+    <form action="{{ url_for('post_text') }}" method="POST">
+        <textarea name="text" placeholder="Enter text or URL" required></textarea>
+        <button type="submit">Send Text</button>
+    </form>
+
+    <!-- テキスト表示 -->
+    <h2>Recent Texts</h2>
+    <ul>
+        {% for text in texts %}
+            <li>{{ text }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- ファイルアップロードフォーム -->
+    <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
         <input type="file" name="file" id="file" accept="image/*,video/*">
         <label for="file">Choose a file</label>
         <button type="submit">Upload</button>
     </form>
+
     <h2>Available Media Files</h2>
     <ul>
         {% for file in media_files %}
