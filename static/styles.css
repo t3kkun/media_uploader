@@ -10,9 +10,12 @@ h1, h2 {
 }
 
 form {
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-top: 20px;
 }
+
 
 input[type="file"] {
     display: none;
@@ -40,11 +43,28 @@ button {
     cursor: pointer;
     font-size: 16px;
     border: none;
+    margin-left: 10px;
 }
 
 button:hover {
     background-color: #218838;
 }
+
+.copy-button {
+    background-color: #ff3c66;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.copy-button:hover {
+    background-color: #912138;
+}
+
 
 ul {
     list-style-type: none;
@@ -53,4 +73,16 @@ ul {
 
 li {
     margin: 5px 0;
+}
+
+textarea {
+    width: 300px;
+    height: 80px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: none;
+    margin-right: 10px;
+    box-sizing: border-box;
 }
