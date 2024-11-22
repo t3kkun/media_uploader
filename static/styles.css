@@ -50,6 +50,22 @@ button:hover {
     background-color: #218838;
 }
 
+.copy-button {
+    background-color: #ff3c66;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.copy-button:hover {
+    background-color: #912138;
+}
+
+
 ul {
     list-style-type: none;
     padding: 0;

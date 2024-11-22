@@ -5,6 +5,7 @@
     <title>Upload and List Media Files</title>
     <link rel="stylesheet" href="/static/styles.css">
     <link rel="icon" href="/static/favicon.ico">
+    <script src="/static/js/clipboard.js"></script>
 </head>
 <body>
     <h1>Media Transfer and Text Upload</h1>
@@ -21,9 +22,15 @@
     <h2>Recent Texts</h2>
     <ul>
         {% for text in texts %}
-            <li>{{ text }}</li>
+            <li>
+                {{ text }}
+                <button class="copy-button" onclick="copyToClipboard('{{ text }}')">Copy</button>
+            </li>
         {% endfor %}
     </ul>
+    
+    
+    
 
     <!-- ファイルアップロードフォーム -->
     <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
