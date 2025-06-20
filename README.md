@@ -16,6 +16,7 @@
 Flaskのインストール: 以下のコマンドでFlaskをインストールします。
 ```
 pip install Flask
+pip install qrcode[pil]
 ```
 
 リポジトリのクローン:
