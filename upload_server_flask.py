@@ -90,8 +90,15 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 def get_ip_address():
-    hostname = socket.gethostname()
-    return socket.gethostbyname(hostname)
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect(('8.8.8.8', 80))  # Google DNSへダミー接続
+        return s.getsockname()[0]
+    except Exception:
+        return '127.0.0.1'
+    finally:
+        s.close()
+
 
 def list_media_files():
     return os.listdir(app.config['UPLOAD_FOLDER'])
