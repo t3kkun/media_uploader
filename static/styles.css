@@ -5,6 +5,21 @@ body {
     margin-top: 50px;
 }
 
+footer {
+    margin-top: 50px;
+    padding: 20px;
+    background-color: #eaeaea;
+    font-size: 14px;
+    color: #555;
+}
+footer a {
+    color: #007bff;
+    text-decoration: none;
+}
+footer a:hover {
+    text-decoration: underline;
+}
+
 h1, h2 {
     color: #333;
 }

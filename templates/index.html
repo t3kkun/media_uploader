@@ -6,9 +6,40 @@
     <link rel="stylesheet" href="/static/styles.css">
     <link rel="icon" href="/static/favicon.ico">
     <script src="/static/js/clipboard.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.9em;
+            color: #888;
+            padding: 10px 0;
+        }
+
+        footer img {
+            height: 30px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Media Transfer and Text Upload</h1>
+    <main>
+            <h1>Media Transfer and Text Upload</h1>
 
     <p>Access this page from your devices using: <strong>http://{{ ip_address }}:{{ port }}</strong></p>
     
@@ -50,6 +81,17 @@
     <h2>Scan to Access</h2>
     <img src="/static/qr.png" alt="QR Code to Access Server" width="200">
 
+    </main>
 
+<footer style="margin-top: 40px; text-align: center;">
+    <img src="/static/logo.png" alt="Logo" style="height: 200px; vertical-align: middle;">
+    <p style="font-size: 0.8em; color: #888;">
+        Made with ❤️ by t3kkun
+        | <a href="https://github.com/t3kkun/media_uploader" target="_blank">GitHub Project</a>
+    </p>
+            <p style="font-size: 0.8em; color: #888;">
+            QR Code is a registered trademark of DENSO WAVE INCORPORATED.
+        </p>
+</footer>
 </body>
 </html>
