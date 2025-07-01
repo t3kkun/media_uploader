@@ -2,7 +2,11 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Upload and List Media Files</title>
+    <title>
+        Upload and List Media Files
+        <br>
+        【Experimental】
+    </title>
     <link rel="stylesheet" href="/static/styles.css">
     <link rel="icon" href="/static/favicon.ico">
     <script src="/static/js/clipboard.js"></script>
@@ -60,6 +64,13 @@
         {% endfor %}
     </ul>
 
+    <!-- 動画URL送信用フォーム -->
+    <h2>Download Video</h2>
+        <form action="{{ url_for('download_video_endpoint') }}" method="POST">
+            <input type="url" name="video_url" placeholder="Enter video URL" required style="width: 300px;">
+            <button type="submit">Download</button>
+        </form>
+
     <!-- ファイルアップロードフォーム -->
     <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
         <input type="file" name="file" id="file" multiple>
@@ -67,11 +78,17 @@
         <button type="submit">Upload</button>
     </form>
 
-
     <h2>Available Media Files</h2>
     <ul>
         {% for file in media_files %}
-            <li><a href="{{ url_for('uploaded_file', filename=file) }}">{{ file }}</a></li>
+            {% set ext = file.split('.')[-1].lower() %}
+            {% if ext in ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'webm', 'pdf', 'mov'] %}
+                <!-- 表示・再生できるファイルは従来通り -->
+                <li><a href="{{ url_for('uploaded_file', filename=file) }}">{{ file }}</a></li>
+            {% else %}
+                <!-- 表示しづらいファイルは download 属性付きでダウンロードさせる -->
+                <li><a href="{{ url_for('uploaded_file', filename=file) }}" download>{{ file }}</a></li>
+            {% endif %}
         {% endfor %}
     </ul>
 
