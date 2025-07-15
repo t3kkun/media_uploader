@@ -1,17 +1,15 @@
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, session
 import os
 import time
 import socket
-import qrcode
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'  # セッション用（安全な文字列に変更すること）
 
-def generate_qr(ip,port):
-    url = f"http://{ip}:{port}"
-    qr = qrcode.make(url)
-    qr_path = os.path.join(BASE_DIR, "static", "qr.png")
-    qr.save(qr_path)
+# パスワードを設定
+# ここでは簡単なパスワードを設定していますが、実際のアプリケーションではより強力なパスワードを使用してください
+PASSWORD = "Y0UR_PASSW0RD"
 
 # アップロードフォルダの絶対パスを取得
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -23,6 +21,26 @@ texts = []
 print('-----------------------------------------------------')
 print('ファイルと文字列受け入れ開始中 停止するには【CTRL + C】\nStarting server.. To interrupt, press 【CTRL + C】\n\n公衆無線LANは使わずインタネット共有を活用してください\nDo not use free Wifi, use Mobile Hotspot instead.')
 print('-----------------------------------------------------')
+
+@app.before_request
+def require_login():
+    if request.endpoint not in ('login', 'static', 'uploaded_file') and not session.get('authenticated'):
+        return redirect(url_for('login'))
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        if request.form.get('pw') == PASSWORD:
+            session['authenticated'] = True
+            return redirect(url_for('index'))
+        else:
+            return 'Wrong password', 403
+    return '''
+        <form method="POST">
+            <input type="password" name="pw" autofocus required>
+            <button type="submit">Enter</button>
+        </form>
+    '''
 
 @app.route('/')
 def index():
@@ -50,38 +68,21 @@ def upload_file():
 
     print(f"[INFO] Received {len(files)} file(s).")
 
-    if len(files) == 1:
-        file = files[0]
-        filename = get_unique_filename(file.filename)
-        path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    for file in files:
+        if file and file.filename:
+            filename = get_unique_filename(file.filename)
+            path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
-        start_time = time.perf_counter()
-        file.save(path)
-        end_time = time.perf_counter()
+            start_time = time.perf_counter()
+            file.save(path)
+            end_time = time.perf_counter()
 
-        transfer_time = end_time - start_time
-        file_size_mb = os.path.getsize(path) / (1024 * 1024)
+            transfer_time = end_time - start_time
+            file_size_mb = os.path.getsize(path) / (1024 * 1024)
 
-        print(f"[UPLOAD] {filename}")
-        print(f"[INFO] Size: {file_size_mb:.2f} MB")
-        print(f"[INFO] Time: {transfer_time:.4f} sec")
-
-    else:
-        for file in files:
-            if file and file.filename:
-                filename = get_unique_filename(file.filename)
-                path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-
-                start_time = time.time()
-                file.save(path)
-                end_time = time.time()
-
-                transfer_time = end_time - start_time
-                file_size_mb = os.path.getsize(path) / (1024 * 1024)
-
-                print(f"[UPLOAD] {filename}")
-                print(f"[INFO] Size: {file_size_mb:.2f} MB")
-                print(f"[INFO] Time: {transfer_time:.2f} sec")
+            print(f"[UPLOAD] {filename}")
+            print(f"[INFO] Size: {file_size_mb:.2f} MB")
+            print(f"[INFO] Time: {transfer_time:.4f} sec")
 
     return redirect(url_for('index'))
 
@@ -99,13 +100,12 @@ def get_ip_address():
     finally:
         s.close()
 
-
 def list_media_files():
     return os.listdir(app.config['UPLOAD_FOLDER'])
 
 def save_text(text):
     texts.append(text)
-    if len(texts) > 5:
+    if len(texts) > 1000:
         texts.pop(0)
 
 def get_unique_filename(original_filename):
@@ -119,7 +119,4 @@ def get_unique_filename(original_filename):
 
 if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    ip = get_ip_address()
-    generate_qr(ip, 8000)
-    app.run(debug=False, host='0.0.0.0', port=8000)
-
+    app.run(debug=True, host='0.0.0.0', port=8000)
